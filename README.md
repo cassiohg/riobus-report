@@ -1,4 +1,5 @@
-<h1>riobus-report<h1>
+#riobus-report
+
 <h6>how to compile and run the project</h6>
 
 <ol>
