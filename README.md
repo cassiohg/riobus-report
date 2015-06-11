@@ -8,3 +8,8 @@
     <li>compile with sbt<br>
     <code>$ sbt run</code></li>
 </ol>
+<h6>to produce jar</h6>
+<ol>
+    <li>pacakge with sbt<br>
+    <code>$ sbt package</code></li>
+</ol>

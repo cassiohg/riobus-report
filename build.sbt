@@ -1,4 +1,4 @@
-name := "hello"
+name := "riobus-report"
 
 version := "1.0"
 
