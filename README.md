@@ -1,8 +1,9 @@
-#riobus-report
-
+<h1>riobus-report<h1>
 <h6>how to compile and run the project</h6>
 
-1. install sbt and have 'sbt' variable on your path
-2. cd into riobus-report folder
-3. compile with sbt
->$ sbt run
+<ol>
+    <li>install sbt and have 'sbt' variable on your path</li>
+    <li>cd into riobus-report folder</li>
+    <li>compile with sbt<br>
+    <code>$ sbt run</code></li>
+</ol>
