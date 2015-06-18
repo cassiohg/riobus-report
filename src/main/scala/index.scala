@@ -12,7 +12,7 @@ object RiobusReport {
 
 	def speedLimit(speed: Int) {
 		// val filename = "./resources/abc.txt"
-		val filename = "/Users/cassiohg/Downloads/riobusData/estudo_cassio_part_000000000000.csv"
+		val filename = "./riobusData/estudo_cassio_part_000000000000.csv"
 
 		val filteredSpeeds = sc.textFile(filename, 2).cache()
 		//	file.getLines
@@ -23,11 +23,11 @@ object RiobusReport {
 			.filter(x => x(5).nonEmpty)
 			.filter(x => x(5).toFloat > speed)
 
-		val pw = new PrintWriter(new File("/Users/cassiohg/Downloads/speedLimit-resultCount.txt"), "UTF-8")
+		val pw = new PrintWriter(new File("./result/speedLimit-resultCount.txt"), "UTF-8")
 		pw.write(filteredSpeeds.count().toString)
 		pw.close
 
-		val pw2 = new PrintWriter(new File("/Users/cassiohg/Downloads/speedLimit-result.txt"), "UTF-8")
+		val pw2 = new PrintWriter(new File("./result/speedLimit-result.txt"), "UTF-8")
 		filteredSpeeds.take(10).foreach(x => pw2.write((x mkString ", ") + "\n"))
 		pw2.close
 		
