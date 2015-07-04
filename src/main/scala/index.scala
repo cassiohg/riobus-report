@@ -18,8 +18,10 @@ object  myApp {
 
 	def main(args: Array[String]) {
 		val speed = args(0).toDouble // value that will hold the speed we will compare to every register speed value.
-		val dateBeggin = dateFormathttp.parse(args(1)) // value date that will hold the beggining of the date range.
-		val dateEnd = dateFormathttp.parse(args(2)) // value date that will hold the end of the date range.
+		val dateBeggin = dateFormathttp.parse(args(1)) // value date that will hold the beggining of the date interval.
+		val dateEnd = dateFormathttp.parse(args(2)) // value date that will hold the end of the date interval.
+
+		// rectangle specified by an anchor point, a length and a height. the anchor point is in the top left corner.
 		val rectangleX = args(3).toDouble // value date that will hold the x value for the rectangle anchor point.
 		val rectangleY = args(4).toDouble // value date that will hold the y value for the rectangle anchor point.
 		val rectangleLength = args(5).toDouble // value date that will hold rectangle's legnth.
@@ -32,14 +34,14 @@ object  myApp {
 		val isAboveSpeed = {(speedString: String) => speedString.nonEmpty && speedString.toFloat > speed}
 
 		// returns true if 'stringDate', converted to Date object is bigger than 'dateBeggin' and smaller than 'dateEnd'.
-		val isdateInsideRange = {(stringDate: String) =>
+		val isdateInsideInterval = {(stringDate: String) =>
 			//converting string to a date using pattern inside 'dateFormatGoogle'.
 			var date = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss 'UTC'")).parse(stringDate)
 			// appearenlty I can't use the 'dateFormatGoogle' because 'SimpleDateFormat' is not thread safe. I need a
 			// new instance for every thread, but I don't know how to do it in an spark application. That's why I create a
 			// new instance inside every function call.
 
-			// testing if date is inside date range.
+			// testing if date is inside date interval.
 			date.compareTo(dateBeggin) >= 0 && date.compareTo(dateEnd) <= 0
 		}
 
@@ -52,7 +54,9 @@ object  myApp {
 			x >= rectangleX && x <= rectangleX + rectangleLength && y <= rectangleY && y >= rectangleY + rectangleHeight
 		}
 
-		// Code that will implement the speed limit report. It will filter every register that has speed above given value.
+
+		// Code that will implement the speed limit report. It will filter every register that has speed above given value,
+		// inside a date interval and is inside a rectangle area in latitute and longitude.
 
 		// reading text file with 2 copies, then caching on memory.
 		val filteredSpeeds = sc.textFile(filenameAndPath, 2).cache()
@@ -60,9 +64,9 @@ object  myApp {
 			.mapPartitionsWithIndex { (idx, iter) => if (idx == 0) iter.drop(1) else iter } 
 			// spliting each line by commas.
 			.map(x => x.split(",").toList) 
-			// filtering lines with value of 6th column above 'speed' that are not empty, are inside date range
-			// range and rectangle area given in argument.
-			.filter(x => isAboveSpeed(x(5)) && isdateInsideRange(x(0)) && isInsideRectangle(x(3), x(4)) )
+			// filtering lines with value of 6th column above 'speed' that are not empty, are inside date interval
+			// and rectangle area given in application argument.
+			.filter(x => isAboveSpeed(x(5)) && isdateInsideInterval(x(0)) && isInsideRectangle(x(3), x(4)) )
 
 		// we will need to write in a file the argument we have received (as a confirmation), the size of the result and 
 		// a sample of it, of a small size.
