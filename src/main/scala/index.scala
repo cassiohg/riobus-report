@@ -26,6 +26,7 @@ object  myApp {
 		val rectangleY = args(4).toDouble // value date that will hold the y value for the rectangle anchor point.
 		val rectangleLength = args(5).toDouble // value date that will hold rectangle's legnth.
 		val rectangleHeight = args(6).toDouble // value date that will hold rectangle's height.
+		val sampleLength = args(7).toInt // value that holds the amount of registers that will be saved on file.
 		
 		// Defining functions instead of methods. I am doing it because 'myApp' is an object, not a class, so I don't have
 		// a constructor for it. That means I can't use the arguments 'args' out of 'main' method.
@@ -72,12 +73,12 @@ object  myApp {
 		// a sample of it, of a small size.
 		val pw = new PrintWriter(new File(resultFilenameAndPath), "UTF-8") // creating file to be written on.
 		// writing the arguments we have received. just to give a feedback.
-		pw.write(args(0)+","+args(1)+","+args(2)+","+args(3)+","+args(4)+","+args(5)+","+args(6)+ "\n")
+		pw.write(args(0)+","+args(1)+","+args(2)+","+args(3)+","+args(4)+","+args(5)+","+args(6)+","+args(7)+ "\n")
 		// writing the amount of records in the result.
 		pw.write(filteredSpeeds.count().toString + "\n")
 
 		// each element of 'filteredSpeeds' needs to be concatenated and converted to string before being written in file.
-		filteredSpeeds.take(200).foreach(x => pw.write((x mkString ",") + "\n")) // writing the first 200 records.
+		filteredSpeeds.take(sampleLength).foreach(x => pw.write((x mkString ",") + "\n")) // writing the first records.
 		pw.close // closing file.
 	}
 }
