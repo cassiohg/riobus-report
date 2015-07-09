@@ -22,10 +22,10 @@ object  myApp {
 		val dateEnd = dateFormathttp.parse(args(2)) // value date that will hold the end of the date interval.
 
 		// rectangle specified by an anchor point, a length and a height. the anchor point is in the top left corner.
-		val rectangleX = args(3).toDouble // value date that will hold the x value for the rectangle anchor point.
-		val rectangleY = args(4).toDouble // value date that will hold the y value for the rectangle anchor point.
-		val rectangleLength = args(5).toDouble // value date that will hold rectangle's legnth.
-		val rectangleHeight = args(6).toDouble // value date that will hold rectangle's height.
+		val latitude1 = args(3).toDouble // value date that will hold the rectangle's bottom left latitude.
+		val longitude1 = args(4).toDouble // value date that will hold the rectangle's bottom left longitude.
+		val latitude2 = args(5).toDouble // value date that will hold rectangle's top right latitude.
+		val longitude2 = args(6).toDouble // value date that will hold rectangle's top right longitude.
 		val sampleLength = args(7).toInt // value that holds the amount of registers that will be saved on file.
 		
 		// Defining functions instead of methods. I am doing it because 'myApp' is an object, not a class, so I don't have
@@ -49,10 +49,10 @@ object  myApp {
 		// returns true if latitude and longitude are inside the rectangle defined by the 
 		// arguments given to this application.
 		val isInsideRectangle = {(stringX: String, stringY: String) =>
-			var x = stringX.toDouble // converting string to float.
-			var y = stringY.toDouble // converting string to float.
-			// testing if x and y are inside ractangle boundaries.
-			x >= rectangleX && x <= rectangleX + rectangleLength && y <= rectangleY && y >= rectangleY + rectangleHeight
+			var lat = stringX.toDouble // converting string to double.
+			var lng = stringY.toDouble // converting string to double.
+			// testing if lat and longi are inside ractangle boundaries.
+			lat >= latitude1 && lng >= longitude1 && lat <= latitude2 && lng <= longitude2
 		}
 
 
