@@ -61,7 +61,7 @@ object TopSpeed {
 		// inside a date interval and is inside a rectangle area in latitute and longitude.
 
 		// reading text file with 2 copies, then caching on memory.
-		val filteredSpeeds = sc.textFile(, 2).cache()
+		val filteredSpeeds = sc.textFile(filenameAndPath, 2).cache()
 			//dropping first line of the RDD.
 			.mapPartitionsWithIndex { (idx, iter) => if (idx == 0) iter.drop(1) else iter } 
 			// spliting each line by commas.
