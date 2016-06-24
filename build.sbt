@@ -1,4 +1,4 @@
-name := "riobus-report"
+name := "TopSpeed"
 
 version := "1.0"
 

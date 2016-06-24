@@ -5,8 +5,8 @@ import java.text.SimpleDateFormat
 
 import org.apache.spark.{SparkConf, SparkContext}
 
-object  myApp {
-	val conf = new SparkConf().setAppName("RiobusReport")//.setMaster("spark://localhost:7077")
+object  TopSpeed {
+	val conf = new SparkConf().setAppName("TopSpeed")//.setMaster("spark://localhost:7077")
     val sc = new SparkContext(conf)
 
 	val path = "/Users/cassiohg/Coding/Scala/riobus-report/" // path to project.
@@ -18,7 +18,7 @@ object  myApp {
 
 	def main(args: Array[String]) {
 		val speed = args(0).toDouble // value that will hold the speed we will compare to every register speed value.
-		val dateBeggin = dateFormathttp.parse(args(1)) // value date that will hold the beggining of the date interval.
+		val dateBeggin = dateFormathttp.parse(args(1)) // value date that will hold the beginning of the date interval.
 		val dateEnd = dateFormathttp.parse(args(2)) // value date that will hold the end of the date interval.
 
 		// rectangle specified by an anchor point, a length and a height. the anchor point is in the top left corner.

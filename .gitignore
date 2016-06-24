@@ -4,3 +4,5 @@ target
 project
 riobusData
 result
+metastore_db
+derby*
