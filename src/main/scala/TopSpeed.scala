@@ -5,18 +5,19 @@ import java.text.SimpleDateFormat
 
 import org.apache.spark.{SparkConf, SparkContext}
 
-object  TopSpeed {
+object TopSpeed {
 	val conf = new SparkConf().setAppName("TopSpeed")//.setMaster("spark://localhost:7077")
     val sc = new SparkContext(conf)
-
-	val path = "/Users/cassiohg/Coding/Scala/riobus-report/" // path to project.
-	val filenameAndPath = path + "riobusData/estudo_cassio_part_000000000000.csv" // path to file being read.
-	val resultFilenameAndPath = path + "result/speedLimit-result.txt" // path to file that will be written.
 
 	val dateFormatGoogle = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss 'UTC'") // format used by the data we have.
 	val dateFormathttp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss") // format we use inside http message.
 
 	def main(args: Array[String]) {
+		// path to files being read.
+		val filenameAndPath = "hdfs://localhost:8020/riobusData/estudo_cassio_part_00000000000[0-2]*"
+		// path to file that will be written.
+		val resultFilenameAndPath = "~/speedLimit-result.txt"
+
 		val speed = args(0).toDouble // value that will hold the speed we will compare to every register speed value.
 		val dateBeggin = dateFormathttp.parse(args(1)) // value date that will hold the beginning of the date interval.
 		val dateEnd = dateFormathttp.parse(args(2)) // value date that will hold the end of the date interval.
@@ -60,7 +61,7 @@ object  TopSpeed {
 		// inside a date interval and is inside a rectangle area in latitute and longitude.
 
 		// reading text file with 2 copies, then caching on memory.
-		val filteredSpeeds = sc.textFile(filenameAndPath, 2).cache()
+		val filteredSpeeds = sc.textFile(, 2).cache()
 			//dropping first line of the RDD.
 			.mapPartitionsWithIndex { (idx, iter) => if (idx == 0) iter.drop(1) else iter } 
 			// spliting each line by commas.
