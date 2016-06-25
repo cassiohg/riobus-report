@@ -1,8 +1,4 @@
 .DS_Store
-resources
-target
-project
+project*
+target*
 riobusData
-result
-metastore_db
-derby*
