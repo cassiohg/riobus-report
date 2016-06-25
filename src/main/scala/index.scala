@@ -15,36 +15,36 @@ object TopSpeed {
 	def main(args: Array[String]) {
 		// path to files being read.
 		val filenameAndPath = "hdfs://localhost:8020/riobusData/estudo_cassio_part_00000000000[0-2]*"
-		// path to file that will be written.
-		val resultFilenameAndPath = "~/speedLimit-result.txt"
 
-		val speed = args(0).toDouble // value that will hold the speed we will compare to every register speed value.
-		val dateBeggin = dateFormathttp.parse(args(1)) // value date that will hold the beginning of the date interval.
-		val dateEnd = dateFormathttp.parse(args(2)) // value date that will hold the end of the date interval.
+		val resultFilenameAndPath = args(0) // path to file that will be written.
+
+
+		val dateBegin = dateFormathttp.parse(args(1)) // value date that will hold the date interval's beginning.
+		val dateEnd = dateFormathttp.parse(args(2)) // value date that will hold the date interval's end.
 
 		// rectangle specified by an anchor point, a length and a height. the anchor point is in the top left corner.
 		val latitude1 = args(3).toDouble // value date that will hold the rectangle's bottom left latitude.
 		val longitude1 = args(4).toDouble // value date that will hold the rectangle's bottom left longitude.
 		val latitude2 = args(5).toDouble // value date that will hold rectangle's top right latitude.
 		val longitude2 = args(6).toDouble // value date that will hold rectangle's top right longitude.
-		val sampleLength = args(7).toInt // value that holds the amount of registers that will be saved on file.
+
+		val speed = args(7).toDouble // value that will hold the speed we will compare to every register speed value.
+		val sampleLength = args(8).toInt // value that holds the amount of registers that will be saved on file.
 		
 		// Defining functions instead of methods. I am doing it because 'myApp' is an object, not a class, so I don't have
 		// a constructor for it. That means I can't use the arguments 'args' out of 'main' method.
 
-		// returns true if 'speedString' is not emmpty and it's value converted to float is bigger than 'speed' (arg(0)).
-		val isAboveSpeed = {(speedString: String) => speedString.nonEmpty && speedString.toFloat > speed}
+		// returns true if 'speedString' is not empty and it's value converted to float is bigger than 'speed' (arg(0)).
+		val isAboveSpeed = {(speedString: String) => speedString.nonEmpty && speedString.toDouble > speed}
 
-		// returns true if 'stringDate', converted to Date object is bigger than 'dateBeggin' and smaller than 'dateEnd'.
+		// returns true if 'stringDate', converted to Date object is bigger than 'dateBegin' and smaller than 'dateEnd'.
 		val isdateInsideInterval = {(stringDate: String) =>
 			//converting string to a date using pattern inside 'dateFormatGoogle'.
 			var date = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss 'UTC'")).parse(stringDate)
-			// appearenlty I can't use the 'dateFormatGoogle' because 'SimpleDateFormat' is not thread safe. I need a
-			// new instance for every thread, but I don't know how to do it in an spark application. That's why I create a
-			// new instance inside every function call.
-
-			// testing if date is inside date interval.
-			date.compareTo(dateBeggin) >= 0 && date.compareTo(dateEnd) <= 0
+			/* apparently I can't use the 'dateFormatGoogle' because 'SimpleDateFormat' is not thread safe. I need a
+			new instance for every thread, but I don't know how to do it in an spark application. That's why I create a
+			new instance inside every function call. */
+			date.compareTo(dateBegin) >= 0 && date.compareTo(dateEnd) <= 0 // testing if date is inside date interval.
 		}
 
 		// returns true if latitude and longitude are inside the rectangle defined by the 
@@ -61,9 +61,7 @@ object TopSpeed {
 		// inside a date interval and is inside a rectangle area in latitute and longitude.
 
 		// reading text file with 2 copies, then caching on memory.
-		val filteredSpeeds = sc.textFile(filenameAndPath, 2).cache()
-			//dropping first line of the RDD.
-			.mapPartitionsWithIndex { (idx, iter) => if (idx == 0) iter.drop(1) else iter } 
+		val filteredSpeeds = sc.textFile(filenameAndPath)
 			// spliting each line by commas.
 			.map(x => x.split(",").toList) 
 			// filtering lines with value of 6th column above 'speed' that are not empty, are inside date interval
@@ -77,7 +75,6 @@ object TopSpeed {
 		pw.write(args(0)+","+args(1)+","+args(2)+","+args(3)+","+args(4)+","+args(5)+","+args(6)+","+args(7)+ "\n")
 		// writing the amount of records in the result.
 		pw.write(filteredSpeeds.count().toString + "\n")
-
 		// each element of 'filteredSpeeds' needs to be concatenated and converted to string before being written in file.
 		filteredSpeeds.take(sampleLength).foreach(x => pw.write((x mkString ",") + "\n")) // writing the first records.
 		pw.close // closing file.
