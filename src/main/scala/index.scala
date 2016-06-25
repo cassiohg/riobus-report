@@ -14,10 +14,9 @@ object TopSpeed {
 
 	def main(args: Array[String]) {
 		// path to files being read.
-		val filenameAndPath = "hdfs://localhost:8020/riobusData/estudo_cassio_part_00000000000[0-2]*"
+		val filenameAndPath = "hdfs://localhost:8020/riobusData/estudo_cassio_part_00000000000[0-19]*"
 
 		val resultFilenameAndPath = args(0) // path to file that will be written.
-
 
 		val dateBegin = dateFormathttp.parse(args(1)) // value date that will hold the date interval's beginning.
 		val dateEnd = dateFormathttp.parse(args(2)) // value date that will hold the date interval's end.
