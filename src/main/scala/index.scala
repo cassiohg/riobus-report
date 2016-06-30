@@ -1,21 +1,19 @@
-
+import org.apache.spark.{SparkConf, SparkContext}
 import java.io._
 import java.util.Date
 import java.text.SimpleDateFormat
-
-import org.apache.spark.{SparkConf, SparkContext}
 
 object TopSpeed {
 	val conf = new SparkConf().setAppName("TopSpeed")//.setMaster("spark://localhost:7077")
     val sc = new SparkContext(conf)
 
+    // path to files being read.
+	val filenameAndPath = "hdfs://localhost:8020/riobusData/estudo_cassio_part_00000000000[0-19]*"
+
 	val dateFormatGoogle = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss 'UTC'") // format used by the data we have.
 	val dateFormathttp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss") // format we use inside http message.
 
 	def main(args: Array[String]) {
-		// path to files being read.
-		val filenameAndPath = "hdfs://localhost:8020/riobusData/estudo_cassio_part_00000000000[0-19]*"
-
 		val resultFilenameAndPath = args(0) // path to file that will be written.
 
 		val dateBegin = dateFormathttp.parse(args(1)) // value date that will hold the date interval's beginning.
@@ -71,7 +69,7 @@ object TopSpeed {
 		// a sample of it, of a small size.
 		val pw = new PrintWriter(new File(resultFilenameAndPath), "UTF-8") // creating file to be written on.
 		// writing the arguments we have received. just to give a feedback.
-		pw.write(args(0)+","+args(1)+","+args(2)+","+args(3)+","+args(4)+","+args(5)+","+args(6)+","+args(7)+ "\n")
+		pw.write(args(1)+","+args(2)+","+args(3)+","+args(4)+","+args(5)+","+args(6)+","+args(7)+ "\n")
 		// writing the amount of records in the result.
 		pw.write(filteredSpeeds.count().toString + "\n")
 		// each element of 'filteredSpeeds' needs to be concatenated and converted to string before being written in file.
